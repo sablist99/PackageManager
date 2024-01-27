@@ -4,7 +4,7 @@ namespace PackageManager.Logic.TaskFactory
 {
     public class IOTaskFactory : ITaskFactory
     {
-        public ProgrammTask GetTask()
+        public ProgramTask GetTask()
         {
             throw new NotImplementedException();
         }
