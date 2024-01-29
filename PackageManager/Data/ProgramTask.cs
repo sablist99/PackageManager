@@ -3,6 +3,10 @@
     public class ProgramTask
     {
         /// <summary>
+        /// Уникальный идентификатор задачи
+        /// </summary>
+        public int TID { get; set; }
+        /// <summary>
         /// Требуемое количество оперативной памяти в МБ
         /// </summary>
         public int RequiredMemory { get; set; }
