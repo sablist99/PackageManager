@@ -1,12 +1,19 @@
 ﻿using PackageManager.Data;
+using static PackageManager.Data.Constants;
 
 namespace PackageManager.Logic.TaskFactory
 {
-    public class IOTaskFactory : ITaskFactory
+    public class IoTaskFactory : TaskFactory
     {
-        public ProgramTask GetTask()
+        public override ProgramTask GetTask()
         {
-            throw new NotImplementedException();
+            ProgramTask task = base.GetTask();
+            var random = new Random();
+
+            task.ArithmeticOperations = random.Next(SmallQuantityMin, SmallQuantityMax);
+            task.IOOperations = random.Next(LargeQuantityMin, LargeQuantityMax);
+
+            return task;
         }
     }
 }

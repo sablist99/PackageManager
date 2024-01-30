@@ -6,11 +6,11 @@ namespace PackageManager.Logic.PackageBuilder
     public class PackageBuilder : IPackageBuilder
     {
         public PackageBuilder(){}
-        public IDictionary<TaskType, ITaskFactory> Factories { get; set; } = new Dictionary<TaskType, ITaskFactory>()
+        public IDictionary<TaskType, TaskFactory.TaskFactory> Factories { get; set; } = new Dictionary<TaskType, TaskFactory.TaskFactory>()
         {
             {TaskType.Arithmetic, new ArithmeticTaskFactory()},
             {TaskType.Balance, new BalanceTaskFactory()},
-            {TaskType.IO, new IOTaskFactory()},
+            {TaskType.IO, new IoTaskFactory()},
         };
 
         public IDictionary<TaskType, int> Parts { get; set; }
@@ -24,7 +24,7 @@ namespace PackageManager.Logic.PackageBuilder
 
             // Пренебрегаем точностью при делении. Например, если Percent = 45, то на оставшиеся части должно прийтись  по 27,5. Но храним в int.
             // Небольшая неточность роли не сыграет. Главное, что Percent = 45
-            var otherPartPercent = (100 - percent) / (Factories.Count() - 1);
+            var otherPartPercent = (100 - percent) / (Factories.Count - 1);
             var probabilities = new List<int>();
 
             // Заполняем вероятность выпадения исследуемого типа задач

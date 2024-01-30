@@ -2,6 +2,18 @@
 {
     public static class Constants
     {
+        // Пороговые значения количества задач
+        public const int SmallQuantityMin = 1;
+        public const int SmallQuantityMax = 10;
+        public const int MediumQuantityMin = 11;
+        public const int MediumQuantityMax = 20;
+        public const int LargeQuantityMin = 21;
+        public const int LargeQuantityMax = 30;
+
+        // Пороговые значения занимаемой задачами памяти
+        public const int RequiredMemoryMin = 50;
+        public const int RequiredMemoryMax = 500;
+
         /// <summary>
         /// Количество тиков на операцию ввода-вывода
         /// </summary>

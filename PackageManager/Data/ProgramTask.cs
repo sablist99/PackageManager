@@ -12,14 +12,14 @@
         public int RequiredMemory { get; set; }
 
         /// <summary>
-        /// Адрес задачи в ОП
-        /// </summary>
-        public int StartMemory { get; set; }
-
-        /// <summary>
         /// Текущий статус задачи
         /// </summary>
         public TaskStatus Status { get; set; }
+        
+        /// <summary>
+        /// Количество арифметических операций
+        /// </summary>
+        public int ArithmeticOperations { get; set; }
 
         /// <summary>
         /// Количество операций ввода-вывода
