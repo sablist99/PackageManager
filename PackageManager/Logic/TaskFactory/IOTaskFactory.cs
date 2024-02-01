@@ -5,15 +5,10 @@ namespace PackageManager.Logic.TaskFactory
 {
     public class IoTaskFactory : TaskFactory
     {
-        public override ProgramTask GetTask()
-        {
-            ProgramTask task = base.GetTask();
-            var random = new Random();
-
-            task.ArithmeticOperations = random.Next(SmallQuantityMin, SmallQuantityMax);
-            task.IOOperations = random.Next(LargeQuantityMin, LargeQuantityMax);
-
-            return task;
-        }
+        public override int ArithmeticOperationsMin { get => SmallQuantityMin; }
+        public override int ArithmeticOperationsMax { get => SmallQuantityMax; }
+        public override int IoOperationsMin { get => LargeQuantityMin; }
+        public override int IoOperationsMax { get => LargeQuantityMax; }
+        public override ProgramTask GetTask() => base.GetTask();
     }
 }

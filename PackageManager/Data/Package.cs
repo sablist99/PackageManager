@@ -5,6 +5,6 @@
         /// <summary>
         /// Пакет задач, отправляемых на исполнение
         /// </summary>
-        public IEnumerable<ProgramTask> Tasks { get; set; }
+        public IEnumerable<ProgramTask> Tasks { get; set; } = new List<ProgramTask>();
     }
 }

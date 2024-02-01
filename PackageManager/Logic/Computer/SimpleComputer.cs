@@ -1,7 +1,7 @@
 ﻿using PackageManager.Data;
 using PackageManager.Logic.ExecuteStrategy;
 using PackageManager.Logic.PackageBuilder;
-using PackageManager.Logic.RAMManager;
+using PackageManager.Logic.RamManager;
 using static PackageManager.Data.Constants;
 
 namespace PackageManager.Logic.Computer
@@ -12,7 +12,7 @@ namespace PackageManager.Logic.Computer
         {
             Strategy = strategy;
             PackageBuilder = new PackageBuilder.PackageBuilder();
-            RamManager = new RamManager(RAMCapacity, OperationSystemWeight);
+            RamManager = new RamManager.RamManager(RAMCapacity, OperationSystemWeight);
         }
 
         protected override IExecuteStrategy Strategy { get; set; }
@@ -23,7 +23,7 @@ namespace PackageManager.Logic.Computer
         {
             return new Report
             {
-                Statistic = Strategy.Execute(PackageBuilder.GetPackage(taskType, percent)),
+                Statistic = Strategy.Execute(PackageBuilder.GetPackage(taskType, percent), RamManager),
                 Type = taskType,
                 Percent = percent
             };

@@ -1,6 +1,6 @@
 ﻿using PackageManager.Data;
 
-namespace PackageManager.Logic.RAMManager
+namespace PackageManager.Logic.RamManager
 {
     public class RamManager : IRamManager
     {
@@ -13,9 +13,13 @@ namespace PackageManager.Logic.RAMManager
         public (bool, RamPart?) FindFreeSpace(int size)
         {
             var currentPart = firstPart;
+            if (currentPart.IsEmpty && currentPart.EndAddress - currentPart.BeginAddress > size)
+            {
+                return (true, currentPart);
+            }
             while (currentPart.NextPart != null)
             {
-                if (currentPart.IsEmpty && currentPart.EndAddress - currentPart.BeginAddress < size)
+                if (currentPart.IsEmpty && currentPart.EndAddress - currentPart.BeginAddress > size)
                 {
                     return (true, currentPart);
                 }   
@@ -71,6 +75,7 @@ namespace PackageManager.Logic.RAMManager
                         else
                         {
                             currentPart.PreviousPart = null;
+                            firstPart = currentPart;
                         }
                     }
 
@@ -118,7 +123,7 @@ namespace PackageManager.Logic.RAMManager
 
             if (freeSpace.EndAddress - freeSpace.BeginAddress != task.RequiredMemory)
             {
-                RamPart newTaskPart = new RamPart
+                RamPart newTaskPart = new()
                 {
                     BeginAddress = freeSpace.BeginAddress + task.RequiredMemory,
                     EndAddress = freeSpace.EndAddress,
@@ -130,6 +135,11 @@ namespace PackageManager.Logic.RAMManager
                 freeSpace.EndAddress = newTaskPart.BeginAddress;
                 freeSpace.NextPart = newTaskPart;
             }
+        }
+
+        public RamPart GetRamPart()
+        {
+            return firstPart;
         }
     }
 }

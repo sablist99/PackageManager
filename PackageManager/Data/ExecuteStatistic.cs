@@ -15,13 +15,13 @@
         /// <summary>
         /// Затраченное число тиков на переключение задач
         /// </summary>
-        public int SwitchTicksOnExecute { get; set; }
+        public int TicksOnSwitch { get; set; }
 
         /// <summary>
         /// Полезная работа процессора
         /// </summary>
         public double UsefulWork =>
-            (double)SwitchTicksOnExecute /
-            (SwitchTicksOnExecute + CompletedTicksOnExecute + CompletedTicksOnPending);
+            (double)CompletedTicksOnExecute /
+            (TicksOnSwitch + CompletedTicksOnExecute + CompletedTicksOnPending);
     }
 }

@@ -5,15 +5,10 @@ namespace PackageManager.Logic.TaskFactory
 {
     public class BalanceTaskFactory : TaskFactory
     {
-        public override ProgramTask GetTask()
-        {
-            ProgramTask task = base.GetTask();
-            var random = new Random();
-
-            task.ArithmeticOperations = random.Next(MediumQuantityMin, MediumQuantityMax);
-            task.IOOperations = random.Next(MediumQuantityMin, MediumQuantityMax);
-
-            return task;
-        }
+        public override int ArithmeticOperationsMin { get => MediumQuantityMin; }
+        public override int ArithmeticOperationsMax { get => MediumQuantityMax; }
+        public override int IoOperationsMin { get => MediumQuantityMin; }
+        public override int IoOperationsMax { get => MediumQuantityMax; }
+        public override ProgramTask GetTask() => base.GetTask();
     }
 }

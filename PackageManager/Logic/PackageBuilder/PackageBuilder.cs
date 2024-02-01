@@ -13,7 +13,7 @@ namespace PackageManager.Logic.PackageBuilder
             {TaskType.IO, new IoTaskFactory()},
         };
 
-        public IDictionary<TaskType, int> Parts { get; set; }
+        public IDictionary<TaskType, int> Parts { get; set; } = new Dictionary<TaskType, int>();
 
         public Package GetPackage(TaskType taskType, int percent)
         {

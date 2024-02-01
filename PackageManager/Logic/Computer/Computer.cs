@@ -1,7 +1,7 @@
 ﻿using PackageManager.Data;
 using PackageManager.Logic.ExecuteStrategy;
 using PackageManager.Logic.PackageBuilder;
-using PackageManager.Logic.RAMManager;
+using PackageManager.Logic.RamManager;
 
 namespace PackageManager.Logic.Computer
 {

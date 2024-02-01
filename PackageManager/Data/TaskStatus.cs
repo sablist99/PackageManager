@@ -3,9 +3,9 @@
     public enum TaskStatus
     {
         New,
-        Ready,
-        Performed,
-        Pending,
-        Completed
+        Ready,      // Готова к выполнению
+        Performed,  // Выполняется
+        Pending,    // В ожидании
+        Completed   // Завершена
     }
 }
