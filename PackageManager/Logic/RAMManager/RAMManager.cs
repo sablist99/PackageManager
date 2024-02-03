@@ -129,21 +129,23 @@ namespace PackageManager.Logic.RamManager
             throw new Exception("При удалении произошла ошибка");
         }
 
-        public bool ContainsTask(int tid)
+        public RamPart? GetPartByTaskTid(int tid)
         {
             var currentPart = firstPart;
             do
             {
                 if (currentPart.ProgramTask?.TID == tid)
                 {
-                    return true;
+                    return currentPart;
                 }
                 currentPart = currentPart.NextPart;
             }
-            while (currentPart != null) ;
+            while (currentPart != null);
 
-            return false;
+            return null;
         }
+
+        public bool ContainsTask(int tid) => GetPartByTaskTid(tid) != null;
 
         public void InsertTask(RamPart freeSpace, ProgramTask task)
         {
@@ -188,6 +190,37 @@ namespace PackageManager.Logic.RamManager
                 currentPart = currentPart.NextPart;
             }
             while (currentPart != null);
+            return null;
+        }
+
+        public ProgramTask? GetNextReadyTaskByTid(int? tid)
+        {
+            if (tid == null)
+            {
+                return null;
+            }
+            var sourcePart = GetPartByTaskTid((int)tid);
+            var currentPart = sourcePart;
+            if (currentPart == null)
+            {
+                // Если не смогли найти исходную задачу в памяти, то вообще ничего не возвращаем
+                return null;
+            }
+            do
+            {
+                currentPart = currentPart.NextPart;
+                if (currentPart == null)
+                {
+                    // Это обеспечивает цикличность
+                    // FP -> P1 -> P2 -> SP -> null
+                    currentPart = firstPart;
+                }
+                if (currentPart.ProgramTask != null && currentPart.ProgramTask.Status == Data.TaskStatus.Ready)
+                {
+                    return currentPart.ProgramTask;
+                }
+            }
+            while (currentPart != sourcePart);
             return null;
         }
     }

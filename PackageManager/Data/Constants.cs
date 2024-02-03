@@ -40,9 +40,13 @@
         public const int TaskCount = 10000;
 
         /// <summary>
+        /// Количество тиков, которое дается задаче в алгоритме RobinRound
+        /// </summary>
+        public const int AllocatedTicks = 10;
+
+        /// <summary>
         /// Синглтон для выдачи уникального номера задачи
         /// </summary>
         public static int GlobalTID = 1;
-
     }
 }

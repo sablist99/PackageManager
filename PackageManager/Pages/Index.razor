@@ -12,14 +12,17 @@
     {
         SimpleComputer queueComputer = new SimpleComputer(new QueueStrategy());
         SimpleComputer noWaitComputer = new SimpleComputer(new NoWaitStrategy());
+        SimpleComputer robinRoundComputer = new SimpleComputer(new RobinRoundStrategy());
 
         TaskType type = TaskType.Arithmetic;
         int percent = 80;
 
         Package package1 = (new PackageBuilder()).GetPackage(type, percent);
         Package package2 = (Package)package1.Clone();
+        Package package3 = (Package)package1.Clone();
 
         Report queueReport = queueComputer.Start(package1, type, percent);
         Report noWaitReport = noWaitComputer.Start(package2, type, percent);
+        Report robinRoundReport = robinRoundComputer.Start(package3, type, percent);
     }
 }
