@@ -29,14 +29,9 @@ namespace PackageManager.Logic.Computer
             };
         }
 
-        public override Report Start(Package package, TaskType taskType, int percent)
+        public override ExecuteStatistic Start(Package package)
         {
-            return new Report
-            {
-                Statistic = Strategy.Execute(package, RamManager),
-                Type = taskType,
-                Percent = percent
-            };
+            return Strategy.Execute(package, RamManager);
         }
     }
 }

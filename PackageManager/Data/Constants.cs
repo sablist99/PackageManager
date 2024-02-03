@@ -37,12 +37,12 @@
         /// <summary>
         /// Количество задач, на которых проводится тестирование
         /// </summary>
-        public const int TaskCount = 10000;
+        public static int TaskCount = 100;
 
         /// <summary>
         /// Количество тиков, которое дается задаче в алгоритме RobinRound
         /// </summary>
-        public const int AllocatedTicks = 10;
+        public static int AllocatedTicks = 10;
 
         /// <summary>
         /// Синглтон для выдачи уникального номера задачи

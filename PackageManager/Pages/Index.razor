@@ -1,28 +1,85 @@
 ﻿@page "/"
+@using MudBlazor
 @using PackageManager.Logic.Computer
+@using PackageManager.Logic.Demonstration
 @using PackageManager.Logic.ExecuteStrategy
 @using PackageManager.Data
 @using PackageManager.Logic.PackageBuilder
 
-<button name="but" @onclick="click">Запуск</button>
+<MudContainer Class="mt-4" MaxWidth="MaxWidth.ExtraExtraLarge">
+    
+    <MudGrid Class="align-end">
+        <MudItem xs="2">
+            <MudTextField @bind-Value="@Constants.TaskCount" Label="Количество задач в пакете" />
+        </MudItem>
+        <MudItem xs="2">
+            <MudTextField @bind-Value="@Constants.AllocatedTicks" Label="Количество тиков для robinRound" />
+        </MudItem>
+        <MudItem xs="2">
+            <MudButton OnClick="@Start" Color="@Color.Success" Class="add-item-btn">Запустить расчет</MudButton>
+        </MudItem>
+        <MudItem xs="6"></MudItem>
+    </MudGrid>
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+
+    <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Анализ зависимости КПД системы от типа операций и их относительного количества в пакете</MudText>
+    <MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">(X - относительное количество операций в пакете; Y - КПД системы)</MudText>
+    <MudGrid Class="align-end mt-10" >
+        @foreach (var report in Reports)
+        {
+            <MudItem xs="4">
+                <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">@report.Key</MudText>
+                <MudChart ChartType="ChartType.Line" ChartSeries="@GetSeries(report.Value)" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" ChartOptions="@Options" />
+            </MudItem>
+        }
+    </MudGrid>
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+
+</MudContainer>
+
 
 @code
 {
-    public void click()
+    public ChartOptions Options = new ChartOptions()
+        {
+            LineStrokeWidth = 1,
+            ChartPalette = new[] { Colors.Blue.Accent3, Colors.Red.Accent3, Colors.Green.Accent3 },
+            YAxisTicks = 100,
+        };
+    public string[] XAxisLabels = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+
+
+    public Dictionary<string, Dictionary<string, List<ExecuteStatistic>>> Reports = new Dictionary<string, Dictionary<string, List<ExecuteStatistic>>>();
+    public void Start()
     {
-        SimpleComputer queueComputer = new SimpleComputer(new QueueStrategy());
-        SimpleComputer noWaitComputer = new SimpleComputer(new NoWaitStrategy());
-        SimpleComputer robinRoundComputer = new SimpleComputer(new RobinRoundStrategy());
+        Reports = new();
+        Reports = Demo.GetData();
+    }
 
-        TaskType type = TaskType.Arithmetic;
-        int percent = 80;
+    private List<ChartSeries> GetSeries(Dictionary<string, List<ExecuteStatistic>> data)
+    {
+        List<ChartSeries> series = new List<ChartSeries>();
 
-        Package package1 = (new PackageBuilder()).GetPackage(type, percent);
-        Package package2 = (Package)package1.Clone();
-        Package package3 = (Package)package1.Clone();
+        foreach (var d in data)
+        {
+            series.Add(new ChartSeries()
+                {
+                    Name = d.Key,
+                    Data = ExecuteStatisticListToDoubleArray(d.Value)
+                });
+        }
+        return series;
+    }
 
-        Report queueReport = queueComputer.Start(package1, type, percent);
-        Report noWaitReport = noWaitComputer.Start(package2, type, percent);
-        Report robinRoundReport = robinRoundComputer.Start(package3, type, percent);
+    private double[] ExecuteStatisticListToDoubleArray(List<ExecuteStatistic> list)
+    {
+        double[] array = new double[list.Count];
+        for (int i = 0; i < list.Count; i++)
+        {
+            array[i] = (double)(list[i].UsefulWork) * 100;
+        }
+        return array;
     }
 }
