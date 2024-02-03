@@ -2,23 +2,24 @@
 @using PackageManager.Logic.Computer
 @using PackageManager.Logic.ExecuteStrategy
 @using PackageManager.Data
+@using PackageManager.Logic.PackageBuilder
 
-<PageTitle>Index</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button name="but" @onclick="click">Запуск</button>
 
 @code
 {
-    protected override void OnInitialized()
+    public void click()
     {
-        SimpleComputer computer = new SimpleComputer(new QueueStrategy());
+        SimpleComputer queueComputer = new SimpleComputer(new QueueStrategy());
+        SimpleComputer noWaitComputer = new SimpleComputer(new NoWaitStrategy());
 
-        computer.Start(TaskType.Arithmetic, 80);
+        TaskType type = TaskType.Arithmetic;
+        int percent = 80;
+
+        Package package1 = (new PackageBuilder()).GetPackage(type, percent);
+        Package package2 = (Package)package1.Clone();
+
+        Report queueReport = queueComputer.Start(package1, type, percent);
+        Report noWaitReport = noWaitComputer.Start(package2, type, percent);
     }
-
-
 }

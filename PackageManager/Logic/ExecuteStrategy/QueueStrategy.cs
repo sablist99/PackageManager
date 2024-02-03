@@ -21,7 +21,6 @@ namespace PackageManager.Logic.ExecuteStrategy
                 TicksOnSwitch = 0
             };
 
-            var currentRamPart = ramManager.GetRamPart();
             ProgramTask? currentTask = null;
 
             while (true)
@@ -99,7 +98,7 @@ namespace PackageManager.Logic.ExecuteStrategy
                 }
                 else
                 {
-                    currentTask.Status = TaskStatus.Ready;
+                    currentTask.Status = TaskStatus.Completed;
                     ramManager.DeleteTask(currentTask);
                     statistic.TicksOnSwitch += SwitchTaskCost;
                     currentTask = null;

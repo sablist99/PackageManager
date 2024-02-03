@@ -1,4 +1,5 @@
 ﻿using PackageManager.Data;
+using TaskStatus = PackageManager.Data.TaskStatus;
 
 namespace PackageManager.Logic.RamManager
 {
@@ -11,7 +12,11 @@ namespace PackageManager.Logic.RamManager
         public bool DeleteTask(ProgramTask task);
 
         public bool ContainsTask(int tid);
+        
         public RamPart GetRamPart();
+
+        public ProgramTask? GetFirstTaskByStatus(TaskStatus status);
+
         protected void InsertTask(RamPart freeSpace, ProgramTask task);
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace PackageManager.Data
+﻿using System.Threading.Tasks;
+
+namespace PackageManager.Data
 {
-    public class ProgramTask
+    public class ProgramTask : ICloneable
     {
         /// <summary>
         /// Уникальный идентификатор задачи
@@ -46,5 +48,26 @@
         /// </summary>
         public int CompletedTicksOnExecute { get; set; }
 
+        public object Clone()
+        {
+            List<OperationType> newList = new(Operations.Count);
+
+            foreach (var item in Operations)
+            {
+                newList.Add(item);
+            }
+            return new ProgramTask()
+            {
+                TID = TID,
+                RequiredMemory = RequiredMemory,
+                Status = Status,
+                Operations = newList,
+                WaitTicks = WaitTicks,
+                ArithmeticOperationsCount = ArithmeticOperationsCount,
+                IOOperationsCount = IOOperationsCount,
+                CompletedTicksOnPending = CompletedTicksOnPending,
+                CompletedTicksOnExecute = CompletedTicksOnExecute,
+            };
+        }
     }
 }

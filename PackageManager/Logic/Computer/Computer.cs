@@ -11,5 +11,7 @@ namespace PackageManager.Logic.Computer
         protected abstract IPackageBuilder PackageBuilder { get; set; }
         protected abstract IRamManager RamManager { get; set; }
         public abstract Report Start(TaskType taskType, int percent);
+        public abstract Report Start(Package package, TaskType taskType, int percent);
+
     }
 }

@@ -6,25 +6,52 @@ namespace PackageManager.Logic.RamManager
     {
         private RamPart firstPart { get; set; }
 
+        private string RamState
+        {
+            get
+            {
+                string result = "";
+                var currentPart = firstPart;
+                do
+                {
+                    result += $"({currentPart.BeginAddress} - {currentPart.EndAddress}) -> {currentPart.ProgramTask?.TID} -> Prev = {currentPart.PreviousPart?.ProgramTask?.TID}; Next = {currentPart.NextPart?.ProgramTask?.TID}\n";
+
+                    currentPart = currentPart.NextPart;
+                }
+                while (currentPart != null);
+
+                return result;
+            }
+        }
         public RamManager(int ramSize, int osSize)
         {
             firstPart = new RamPart { EndAddress = ramSize, BeginAddress = osSize};
         }
+
+        /// <summary>
+        /// Печатет состояние ОП в консоль
+        /// </summary>
+        /// <param name="message">Информационное сообщение, например, место вызова</param>
+        private void printState(string message)
+        {
+            Console.Clear();
+            Console.WriteLine(message);
+            Console.Write(RamState);
+        }
+
         public (bool, RamPart?) FindFreeSpace(int size)
         {
             var currentPart = firstPart;
-            if (currentPart.IsEmpty && currentPart.EndAddress - currentPart.BeginAddress > size)
-            {
-                return (true, currentPart);
-            }
-            while (currentPart.NextPart != null)
+            
+            do
             {
                 if (currentPart.IsEmpty && currentPart.EndAddress - currentPart.BeginAddress > size)
                 {
                     return (true, currentPart);
-                }   
+                }
                 currentPart = currentPart.NextPart;
             }
+            while (currentPart != null);
 
             return (false, null);
         }
@@ -52,9 +79,9 @@ namespace PackageManager.Logic.RamManager
             {
                 return false;
             }
-
+            
             var currentPart = firstPart;
-            while (currentPart.NextPart != null)
+            do
             {
                 if (currentPart.ProgramTask?.TID == task.TID)
                 {
@@ -98,13 +125,14 @@ namespace PackageManager.Logic.RamManager
                 }
                 currentPart = currentPart.NextPart;
             }
+            while (currentPart != null);
             throw new Exception("При удалении произошла ошибка");
         }
 
         public bool ContainsTask(int tid)
         {
             var currentPart = firstPart;
-            while (currentPart.NextPart != null)
+            do
             {
                 if (currentPart.ProgramTask?.TID == tid)
                 {
@@ -112,6 +140,7 @@ namespace PackageManager.Logic.RamManager
                 }
                 currentPart = currentPart.NextPart;
             }
+            while (currentPart != null) ;
 
             return false;
         }
@@ -134,12 +163,32 @@ namespace PackageManager.Logic.RamManager
                 };
                 freeSpace.EndAddress = newTaskPart.BeginAddress;
                 freeSpace.NextPart = newTaskPart;
+                if (freeSpace.NextPart.NextPart != null)
+                {
+                    freeSpace.NextPart.NextPart.PreviousPart = newTaskPart;
+                }
             }
         }
 
         public RamPart GetRamPart()
         {
             return firstPart;
+        }
+
+        public ProgramTask? GetFirstTaskByStatus(Data.TaskStatus status)
+        {
+            var currentPart = firstPart;
+            do
+            {
+                if (currentPart.ProgramTask != null && currentPart.ProgramTask.Status == status)
+                {
+                    return currentPart.ProgramTask;
+                }
+
+                currentPart = currentPart.NextPart;
+            }
+            while (currentPart != null);
+            return null;
         }
     }
 }
