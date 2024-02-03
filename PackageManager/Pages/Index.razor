@@ -7,35 +7,43 @@
 @using PackageManager.Logic.PackageBuilder
 
 <MudContainer Class="mt-4" MaxWidth="MaxWidth.ExtraExtraLarge">
-    
+
     <MudGrid Class="align-end">
         <MudItem xs="2">
             <MudTextField @bind-Value="@Constants.TaskCount" Label="Количество задач в пакете" />
         </MudItem>
         <MudItem xs="2">
-            <MudTextField @bind-Value="@Constants.AllocatedTicks" Label="Количество тиков для robinRound" />
-        </MudItem>
-        <MudItem xs="2">
-            <MudButton OnClick="@Start" Color="@Color.Success" Class="add-item-btn">Запустить расчет</MudButton>
+            <MudButton OnClick="@StartCompareAlgorithms" Color="@Color.Success" Class="add-item-btn">Запустить расчет</MudButton>
         </MudItem>
         <MudItem xs="6"></MudItem>
     </MudGrid>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-6" />
 
-    <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Анализ зависимости КПД системы от типа операций и их относительного количества в пакете</MudText>
+    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">Анализ зависимости КПД системы от типа операций и их относительного количества в пакете</MudText>
     <MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">(X - относительное количество операций в пакете; Y - КПД системы)</MudText>
-    <MudGrid Class="align-end mt-10" >
-        @foreach (var report in Reports)
+    <MudGrid Class="align-end mt-10">
+        @foreach (var report in KpdExecuteStatistic)
         {
             <MudItem xs="4">
                 <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">@report.Key</MudText>
-                <MudChart ChartType="ChartType.Line" ChartSeries="@GetSeries(report.Value)" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" ChartOptions="@Options" />
+                <MudChart ChartType="ChartType.Line" ChartSeries="@GetKpdSeries(report.Value)" XAxisLabels="@XAxisLabelsKpd" Width="100%" Height="350px" ChartOptions="@Options" />
             </MudItem>
         }
     </MudGrid>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+    <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">Сравнение количества операций в зависимости от алгоритма, типа операций и выделенного кванта времени</MudText>
+    <MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">(X - Алгоритмы (+ квант); Y - Количество операций; Столбцы - типы операций)</MudText>
+    <MudGrid Class="align-end mt-10">
+        @foreach (var report in OperationsExecuteStatistic)
+        {
+            <MudItem xs="6">
+                <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">@report.Key</MudText>
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@GetOperationsSeries(report.Value)" XAxisLabels="@XAxisLabelsOperations" Width="100%" Height="350px" ChartOptions="@Options" />
+            </MudItem>
+        }
+    </MudGrid>
 
 </MudContainer>
 
@@ -46,19 +54,40 @@
         {
             LineStrokeWidth = 1,
             ChartPalette = new[] { Colors.Blue.Accent3, Colors.Red.Accent3, Colors.Green.Accent3 },
-            YAxisTicks = 100,
         };
-    public string[] XAxisLabels = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+    public string[] XAxisLabelsKpd = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
+    public string[] XAxisLabelsOperations = { "Очередь", "Очередь без ожидания", "RR(1)", "RR(5)", "RR(10)", "RR(15)", "RR(20)"};
 
+    public Dictionary<string, List<(string, ExecuteStatistic)>> OperationsExecuteStatistic = new Dictionary<string, List<(string, ExecuteStatistic)>>();
 
-    public Dictionary<string, Dictionary<string, List<ExecuteStatistic>>> Reports = new Dictionary<string, Dictionary<string, List<ExecuteStatistic>>>();
-    public void Start()
+    public Dictionary<string, Dictionary<string, List<ExecuteStatistic>>> KpdExecuteStatistic = new Dictionary<string, Dictionary<string, List<ExecuteStatistic>>>();
+
+    public void StartCompareAlgorithms()
     {
-        Reports = new();
-        Reports = Demo.GetData();
+        KpdExecuteStatistic = Demo.GetDataCompareAlgorithmsByTaskTypes();
+        OperationsExecuteStatistic = Demo.GetDataCompareAlgorithmsByCompletedticksByTaskTypes();
     }
 
-    private List<ChartSeries> GetSeries(Dictionary<string, List<ExecuteStatistic>> data)
+    private List<ChartSeries> GetOperationsSeries(List<(string, ExecuteStatistic)> data)
+    {
+        List<ChartSeries> series = new List<ChartSeries>();
+        ChartSeries pendingSeries = new ChartSeries() { Name = "Ожидание", Data = new double[data.Count] };
+        ChartSeries executeSeries = new ChartSeries() { Name = "Выполнение", Data = new double[data.Count] };
+        ChartSeries switchSeries = new ChartSeries() { Name = "Смена задач", Data = new double[data.Count] };
+
+        for (int i = 0; i < data.Count; i++)
+        {
+            pendingSeries.Data[i] = (double)data[i].Item2.CompletedTicksOnPending;
+            executeSeries.Data[i] = (double)data[i].Item2.CompletedTicksOnExecute;
+            switchSeries.Data[i] = (double)data[i].Item2.TicksOnSwitch;
+        }
+
+        return new List<ChartSeries>() {
+            pendingSeries, executeSeries, switchSeries
+        };
+    }
+
+    private List<ChartSeries> GetKpdSeries(Dictionary<string, List<ExecuteStatistic>> data)
     {
         List<ChartSeries> series = new List<ChartSeries>();
 
@@ -67,13 +96,13 @@
             series.Add(new ChartSeries()
                 {
                     Name = d.Key,
-                    Data = ExecuteStatisticListToDoubleArray(d.Value)
+                    Data = ExecuteStatisticUsefulWorkListToDoubleArray(d.Value)
                 });
         }
         return series;
     }
 
-    private double[] ExecuteStatisticListToDoubleArray(List<ExecuteStatistic> list)
+    private double[] ExecuteStatisticUsefulWorkListToDoubleArray(List<ExecuteStatistic> list)
     {
         double[] array = new double[list.Count];
         for (int i = 0; i < list.Count; i++)

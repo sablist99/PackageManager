@@ -7,6 +7,14 @@ namespace PackageManager.Logic.ExecuteStrategy
 {
     public class RobinRoundStrategy : IExecuteStrategy
     {
+        public RobinRoundStrategy() { }
+
+        public RobinRoundStrategy (int allocatedTicks)
+        {
+            this.allocatedTicksBase = allocatedTicks;
+        }
+        public int allocatedTicksBase { get; private set; } = 10;
+
         public ExecuteStatistic Execute(Package package, IRamManager ramManager)
         {
             if (package == null || package.Tasks == null || !package.Tasks.Any())
@@ -23,7 +31,7 @@ namespace PackageManager.Logic.ExecuteStrategy
 
             ProgramTask? currentTask = null;
             ProgramTask? taskBeforeTicksOut = null;
-            int allocatedTiks = AllocatedTicks;
+            int allocatedTicks = allocatedTicksBase;
 
             while (true)
             {
@@ -109,12 +117,12 @@ namespace PackageManager.Logic.ExecuteStrategy
                         case OperationType.Arithmetic:
                             currentTask.Operations.RemoveAt(0);
                             statistic.CompletedTicksOnExecute++;
-                            allocatedTiks--;
-                            if (allocatedTiks == 0)
+                            allocatedTicks--;
+                            if (allocatedTicks == 0)
                             {
                                 // Кончились тики
                                 currentTask.Status = TaskStatus.Ready;
-                                allocatedTiks = AllocatedTicks;
+                                allocatedTicks = allocatedTicksBase;
                                 // Запоминаем задачу, которую выкинули
                                 taskBeforeTicksOut = currentTask;
                                 currentTask = null;
@@ -123,7 +131,7 @@ namespace PackageManager.Logic.ExecuteStrategy
                         case OperationType.IO:
                             currentTask.Status = TaskStatus.Pending;
                             statistic.TicksOnSwitch += SwitchTaskCost;
-                            allocatedTiks = AllocatedTicks;
+                            allocatedTicks = allocatedTicksBase;
                             taskBeforeTicksOut = currentTask;
                             currentTask = null;
                             break;
@@ -136,7 +144,7 @@ namespace PackageManager.Logic.ExecuteStrategy
                     currentTask.Status = TaskStatus.Completed;
                     ramManager.DeleteTask(currentTask);
                     statistic.TicksOnSwitch += SwitchTaskCost;
-                    allocatedTiks = AllocatedTicks;
+                    allocatedTicks = allocatedTicksBase;
                     currentTask = null;
                 }
             }
