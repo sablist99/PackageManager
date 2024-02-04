@@ -81,6 +81,11 @@ namespace PackageManager.Logic.ExecuteStrategy
                             }
                         }
                     }
+                    else
+                    {
+                        // Значит, получилось взять задачу из ОП
+                        statistic.TicksOnSwitch += SwitchTaskCost;
+                    }
                     // TODO не рассматривается случай, когда задача в принципе не может поместиться в память.
                     // На текущий момент регулируется только константой в конфиге
                 }

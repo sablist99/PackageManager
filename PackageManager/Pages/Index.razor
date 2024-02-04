@@ -38,7 +38,7 @@
     <MudGrid Class="align-end mt-10">
         @foreach (var report in OperationsExecuteStatistic)
         {
-            <MudItem xs="6">
+            <MudItem xs="12">
                 <MudText Typo="Typo.h5" Align="Align.Center" GutterBottom="true">@report.Key</MudText>
                 <MudChart ChartType="ChartType.Bar" ChartSeries="@GetOperationsSeries(report.Value)" XAxisLabels="@XAxisLabelsOperations" Width="100%" Height="350px" ChartOptions="@Options" />
             </MudItem>
@@ -56,9 +56,9 @@
             ChartPalette = new[] { Colors.Blue.Accent3, Colors.Red.Accent3, Colors.Green.Accent3 },
         };
     public string[] XAxisLabelsKpd = { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" };
-    public string[] XAxisLabelsOperations = { "Очередь", "Очередь без ожидания", "RR(1)", "RR(5)", "RR(10)", "RR(15)", "RR(20)"};
+    public string[] XAxisLabelsOperations = { "Очередь", "Очередь без ожидания", "RR(1)", "RR(2)", "RR(3)", "RR(4)", "RR(5)", "RR(10)", "RR(15)", "RR(20)"};
 
-    public Dictionary<string, List<(string, ExecuteStatistic)>> OperationsExecuteStatistic = new Dictionary<string, List<(string, ExecuteStatistic)>>();
+    public Dictionary<string, List<ExecuteStatistic>> OperationsExecuteStatistic = new Dictionary<string, List<ExecuteStatistic>>();
 
     public Dictionary<string, Dictionary<string, List<ExecuteStatistic>>> KpdExecuteStatistic = new Dictionary<string, Dictionary<string, List<ExecuteStatistic>>>();
 
@@ -68,7 +68,7 @@
         OperationsExecuteStatistic = Demo.GetDataCompareAlgorithmsByCompletedticksByTaskTypes();
     }
 
-    private List<ChartSeries> GetOperationsSeries(List<(string, ExecuteStatistic)> data)
+    private List<ChartSeries> GetOperationsSeries(List<ExecuteStatistic> data)
     {
         List<ChartSeries> series = new List<ChartSeries>();
         ChartSeries pendingSeries = new ChartSeries() { Name = "Ожидание", Data = new double[data.Count] };
@@ -77,9 +77,9 @@
 
         for (int i = 0; i < data.Count; i++)
         {
-            pendingSeries.Data[i] = (double)data[i].Item2.CompletedTicksOnPending;
-            executeSeries.Data[i] = (double)data[i].Item2.CompletedTicksOnExecute;
-            switchSeries.Data[i] = (double)data[i].Item2.TicksOnSwitch;
+            pendingSeries.Data[i] = (double)data[i].CompletedTicksOnPending;
+            executeSeries.Data[i] = (double)data[i].CompletedTicksOnExecute;
+            switchSeries.Data[i] = (double)data[i].TicksOnSwitch;
         }
 
         return new List<ChartSeries>() {

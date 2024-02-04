@@ -6,20 +6,23 @@ namespace PackageManager.Logic.Demonstration
 {
     public static class Demo
     {
-        public static Dictionary<string, List<(string, ExecuteStatistic)>> GetDataCompareAlgorithmsByCompletedticksByTaskTypes()
+        public static Dictionary<string, List<ExecuteStatistic>> GetDataCompareAlgorithmsByCompletedticksByTaskTypes()
         {
-            return new Dictionary<string, List<(string, ExecuteStatistic)>>
+            return new Dictionary<string, List<ExecuteStatistic>>
             {
                 {"Вычислительные операции", GetDataCompareAlgorithmsByCompletedticks(TaskType.Arithmetic) },
                 {"Сбалансированные операции", GetDataCompareAlgorithmsByCompletedticks(TaskType.Balance) },
                 {"Операции ввода-вывода", GetDataCompareAlgorithmsByCompletedticks(TaskType.IO) },
             };
         }
-        private static List<(string, ExecuteStatistic)> GetDataCompareAlgorithmsByCompletedticks(TaskType type)
+        private static List<ExecuteStatistic> GetDataCompareAlgorithmsByCompletedticks(TaskType type)
         {
             SimpleComputer queueComputer = new(new QueueStrategy());
             SimpleComputer noWaitComputer = new(new NoWaitStrategy());
             SimpleComputer robinRoundComputer_1 = new(new RobinRoundStrategy(1));
+            SimpleComputer robinRoundComputer_2 = new(new RobinRoundStrategy(2));
+            SimpleComputer robinRoundComputer_3 = new(new RobinRoundStrategy(3));
+            SimpleComputer robinRoundComputer_4 = new(new RobinRoundStrategy(4));
             SimpleComputer robinRoundComputer_5 = new(new RobinRoundStrategy(5));
             SimpleComputer robinRoundComputer_10 = new(new RobinRoundStrategy(10));
             SimpleComputer robinRoundComputer_15 = new(new RobinRoundStrategy(15));
@@ -30,20 +33,26 @@ namespace PackageManager.Logic.Demonstration
             Package packageForQueue = (Package)referencePackage.Clone();
             Package packageForBNoWait = (Package)referencePackage.Clone();
             Package packageForRobinRound_1 = (Package)referencePackage.Clone();
+            Package packageForRobinRound_2 = (Package)referencePackage.Clone();
+            Package packageForRobinRound_3 = (Package)referencePackage.Clone();
+            Package packageForRobinRound_4 = (Package)referencePackage.Clone();
             Package packageForRobinRound_5 = (Package)referencePackage.Clone();
             Package packageForRobinRound_10 = (Package)referencePackage.Clone();
             Package packageForRobinRound_15 = (Package)referencePackage.Clone();
             Package packageForRobinRound_20 = (Package)referencePackage.Clone();
 
-            return new List<(string, ExecuteStatistic)>
+            return new List<ExecuteStatistic>
             {
-                {("Очередь", queueComputer.Start(packageForQueue) )},
-                {("Очередь без ожидания", noWaitComputer.Start(packageForBNoWait) )},
-                {("RobinRound, ticks = 1", robinRoundComputer_1.Start(packageForRobinRound_1))},
-                {("RobinRound, ticks = 5", robinRoundComputer_5.Start(packageForRobinRound_5))},
-                {("RobinRound, ticks = 10", robinRoundComputer_10.Start(packageForRobinRound_10))},
-                {("RobinRound, ticks = 15", robinRoundComputer_15.Start(packageForRobinRound_15))},
-                {("RobinRound, ticks = 20", robinRoundComputer_20.Start(packageForRobinRound_20))},
+                queueComputer.Start(packageForQueue)
+                , noWaitComputer.Start(packageForBNoWait)
+                , robinRoundComputer_1.Start(packageForRobinRound_1)
+                , robinRoundComputer_2.Start(packageForRobinRound_2)
+                , robinRoundComputer_3.Start(packageForRobinRound_3)
+                , robinRoundComputer_4.Start(packageForRobinRound_4)
+                , robinRoundComputer_5.Start(packageForRobinRound_5)
+                , robinRoundComputer_10.Start(packageForRobinRound_10)
+                , robinRoundComputer_15.Start(packageForRobinRound_15)
+                , robinRoundComputer_20.Start(packageForRobinRound_20)
             };
         }
 
