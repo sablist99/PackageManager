@@ -3,7 +3,7 @@ using static PackageManager.Data.Constants;
 
 namespace PackageManager.Logic.TaskFactory
 {
-    public class IoTaskFactory : TaskFactory
+    public class IoTaskFactory : AbstractTaskFactory
     {
         public override int ArithmeticOperationsMin { get => SmallQuantityMin; }
         public override int ArithmeticOperationsMax { get => SmallQuantityMax; }

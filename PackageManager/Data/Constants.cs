@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        // Пороговые значения количества задач
+        // Пороговые значения количества операций
         public const int SmallQuantityMin = 1;
         public const int SmallQuantityMax = 10;
         public const int MediumQuantityMin = 11;

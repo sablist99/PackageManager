@@ -6,7 +6,7 @@ namespace PackageManager.Logic.PackageBuilder
     public class PackageBuilder : IPackageBuilder
     {
         public PackageBuilder(){}
-        public IDictionary<TaskType, TaskFactory.TaskFactory> Factories { get; set; } = new Dictionary<TaskType, TaskFactory.TaskFactory>()
+        public IDictionary<TaskType, TaskFactory.AbstractTaskFactory> Factories { get; set; } = new Dictionary<TaskType, TaskFactory.AbstractTaskFactory>()
         {
             {TaskType.Arithmetic, new ArithmeticTaskFactory()},
             {TaskType.Balance, new BalanceTaskFactory()},

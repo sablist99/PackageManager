@@ -7,7 +7,7 @@ using TaskStatus = PackageManager.Data.TaskStatus;
 
 namespace PackageManager.Logic.TaskFactory
 {
-    public abstract class TaskFactory
+    public abstract class AbstractTaskFactory
     {
         public virtual int ArithmeticOperationsMin { get; }
         public virtual int ArithmeticOperationsMax { get; }

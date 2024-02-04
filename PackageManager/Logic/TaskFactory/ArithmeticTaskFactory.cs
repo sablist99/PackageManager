@@ -3,7 +3,7 @@ using static PackageManager.Data.Constants;
 
 namespace PackageManager.Logic.TaskFactory
 {
-    public class ArithmeticTaskFactory : TaskFactory
+    public class ArithmeticTaskFactory : AbstractTaskFactory
     {
         public override int ArithmeticOperationsMin { get => LargeQuantityMin; }
         public override int ArithmeticOperationsMax { get => LargeQuantityMax; }
