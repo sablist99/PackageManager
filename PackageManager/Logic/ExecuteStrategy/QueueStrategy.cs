@@ -88,7 +88,7 @@ namespace PackageManager.Logic.ExecuteStrategy
                             {
                                 // Операция ввода-вывода завершилась
                                 currentTask.Operations.RemoveAt(0);
-                                currentTask.WaitTicks = 5;
+                                currentTask.WaitTicks = PendingIOCost;
                             }
                             statistic.CompletedTicksOnPending++;
                             break;

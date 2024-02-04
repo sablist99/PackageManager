@@ -13,6 +13,9 @@
             <MudTextField @bind-Value="@Constants.TaskCount" Label="Количество задач в пакете" />
         </MudItem>
         <MudItem xs="2">
+            <MudTextField @bind-Value="@Constants.PendingIOCost" Label="Время ожидания ввода-вывода" />
+        </MudItem>
+        <MudItem xs="2">
             <MudButton OnClick="@StartCompareAlgorithms" Color="@Color.Success" Class="add-item-btn">Запустить расчет</MudButton>
         </MudItem>
         <MudItem xs="6"></MudItem>

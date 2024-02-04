@@ -55,7 +55,7 @@ namespace PackageManager.Logic.ExecuteStrategy
                     {
                         // Операция ввода-вывода завершилась
                         actualTask.Operations.RemoveAt(0);
-                        actualTask.WaitTicks = 5;
+                        actualTask.WaitTicks = PendingIOCost;
                         actualTask.Status = TaskStatus.Ready;
                     }
                     //Время ввода-вывода теперь не учитывается, потому что процессор не простаивает, а занимается выполнением другой задачи

@@ -17,7 +17,7 @@
         /// <summary>
         /// Количество тиков на операцию ввода-вывода
         /// </summary>
-        public const int PendingIOCost = 5;
+        public static int PendingIOCost = 5;
 
         /// <summary>
         /// Количество тиков на переключение задачи
