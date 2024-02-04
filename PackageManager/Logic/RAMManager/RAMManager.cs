@@ -170,12 +170,7 @@ namespace PackageManager.Logic.RamManager
                     freeSpace.NextPart.NextPart.PreviousPart = newTaskPart;
                 }
             }
-        }
-
-        public RamPart GetRamPart()
-        {
-            return firstPart;
-        }
+        }      
 
         public ProgramTask? GetFirstTaskByStatus(Data.TaskStatus status)
         {

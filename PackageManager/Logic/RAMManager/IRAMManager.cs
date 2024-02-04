@@ -11,15 +11,13 @@ namespace PackageManager.Logic.RamManager
 
         public bool DeleteTask(ProgramTask task);
 
-        public bool ContainsTask(int tid);
-
-        public RamPart? GetPartByTaskTid(int tid);
-        
-        public RamPart GetRamPart();
-
         public ProgramTask? GetFirstTaskByStatus(TaskStatus status);
 
         public ProgramTask? GetNextReadyTaskByTid(int? tid);
+
+        protected RamPart? GetPartByTaskTid(int tid);
+
+        protected bool ContainsTask(int tid);
 
         protected void InsertTask(RamPart freeSpace, ProgramTask task);
     }
